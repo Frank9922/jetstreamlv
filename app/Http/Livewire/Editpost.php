@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Http\Livewire;
+
+use Livewire\Component;
+use App\Models\Post;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+
+class Editpost extends Component
+{
+    use WithFileUploads;
+
+    public $open=false;
+    public $post;
+    public $image;
+    public $identificador;
+
+    protected $rules = [
+        'post.title' => 'required',
+        'post.content' => 'required'
+    ];
+
+    public function mount(Post $post){
+        $this->post = $post;
+
+        $this->identificador = rand();
+    }
+
+    public function save(){
+        $this->validate();
+
+        if($this->image){
+            Storage::delete([$this->post->image]);
+
+            $this->post->image = $this->image->store('/posts');
+
+        }
+
+        $this->post->save();
+
+        $this->reset(['open', 'image']);
+
+        $this->identificador=rand();
+
+        $this->emitTo('show-posts','render');
+        $this->emit('alert', 'Post Actualizado!');
+
+        $this->open =false;
+    }
+
+    public function render()
+    {
+        return view('livewire.editpost');
+    }
+}
