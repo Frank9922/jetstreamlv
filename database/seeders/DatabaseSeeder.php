@@ -17,6 +17,6 @@ class DatabaseSeeder extends Seeder
     {
         Storage::makeDirectory('posts');
 
-        \App\Models\Post::factory(5)->create();
+        \App\Models\Post::factory(100)->create();
     }
 }

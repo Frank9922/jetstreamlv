@@ -17,7 +17,8 @@
            @if ($image)
                <img class="mb-4" src="{{$image->temporaryUrl()}}" alt="">
            @endif 
-            <div class="mb-4">
+           {{$content}}
+            <div class="mb-4" wire:ignore>
                 <x-label value="Titulo"></x-label>
                 <x-input type="text" class="w-full" wire:model="title"></x-input>
                 @error('title')
@@ -25,7 +26,9 @@
                 @enderror
                 <x-label value="Contenido"></x-label>
                 
-                <textarea wire:model="content"  class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"></textarea>
+                <textarea id="editor"
+                wire:model="content"  
+                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"></textarea>
                 <x-input-error for="content"></x-input-error>
             </div>
 
@@ -55,4 +58,21 @@
 
 
     </x-dialog-modal>
+    @push('js')
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#editor' ) )
+            .then(function(editor){
+                editor.model.document.on('change:data', () => {
+                    @this.set('content', editor.getData());
+                })
+            })
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
+
+    @endpush
 </div> 

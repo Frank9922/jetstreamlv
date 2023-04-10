@@ -20,6 +20,7 @@
 
         <!-- Styles -->
         @livewireStyles
+        @stack('css')
     </head>
     <body class="font-sans antialiased">
         <x-banner />
@@ -44,6 +45,8 @@
 
         @stack('modals')
 
+
+        @stack('js')
         @livewireScripts
         <script>
             livewire.on('alert', function(message){
